@@ -38,11 +38,12 @@ import org.cp.elements.lang.Assert;
 import org.cp.elements.lang.DateTimeUtils;
 import org.cp.elements.lang.ObjectUtils;
 import org.cp.elements.lang.Visitor;
+import org.cp.elements.lang.annotation.Id;
 import org.cp.elements.util.ComparatorUtils;
 
 /**
  * The AbstractBean class is an abstract base class for modeling application data as domain model objects.
- * 
+ *
  * @author John J. Blum
  * @param <ID> the Comparable class type of the identifier uniquely identifying this Bean.
  * @param <USER> the class type of the object identifying the user for auditing information.
@@ -61,7 +62,6 @@ import org.cp.elements.util.ComparatorUtils;
  * @see org.cp.elements.beans.event.ChangeTracker
  * @see org.cp.elements.lang.Visitor
  * @since 1.0.0
- * @version 1.0.0
  */
 @SuppressWarnings("unused")
 public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> implements Bean<ID, USER, PROCESS> {
@@ -78,6 +78,7 @@ public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> imp
 
   private final ChangeTracker changeTracker = new ChangeTracker();
 
+  @Id
   private ID id;
 
   private final Map<String, String> propertyNameToFieldNameMapping = new TreeMap<String, String>();
@@ -107,11 +108,12 @@ public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> imp
   }
 
   /**
-   * Creates an instance of the AbstractBean class initialized with the specified typed identifier.  It is recommended
-   * that the identifier uniquely identify objects within this Bean class.
+   * Constructs an instance of the AbstractBean class initialized with the specified typed identifier.
+   * It is recommended that the identifier uniquely identify objects within this bean class type.
    * 
-   * @param id the generically typed identifier uniquely identifying objects of this particular Bean class.
+   * @param id the generically-typed identifier uniquely identifying objects of this particular bean class.
    * @see org.cp.elements.lang.Identifiable
+   * @see #AbstractBean()
    */
   public AbstractBean(final ID id) {
     this();
@@ -454,7 +456,7 @@ public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> imp
     }
     catch (IllegalArgumentException e) {
       throw new PropertyNotFoundException(String.format(
-        "The property (%1$s) corresponding to field (%2$s) was not found in this Bean (%3$s)!",
+        "The property (%1$s) corresponding to field (%2$s) was not found on this Bean (%3$s)!",
           propertyName, getFieldName(propertyName), getClass().getName()), e);
     }
   }
@@ -521,7 +523,7 @@ public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> imp
       return false;
     }
 
-    final Bean that = (Bean) obj;
+    Bean that = (Bean) obj;
 
     return ObjectUtils.equals(this.getId(), that.getId());
   }
@@ -677,7 +679,7 @@ public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> imp
                                final StateChangeCallback callback)
   {
     try {
-      final PropertyChangeEvent event = createPropertyChangeEvent(propertyName, oldValue, newValue);
+      PropertyChangeEvent event = createPropertyChangeEvent(propertyName, oldValue, newValue);
 
       fireVetoableChange(event);
 
