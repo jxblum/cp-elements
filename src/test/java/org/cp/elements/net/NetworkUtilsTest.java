@@ -26,6 +26,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
 import org.easymock.EasyMock;
 import org.junit.Test;
 
