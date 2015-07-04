@@ -37,6 +37,7 @@ import org.cp.elements.beans.event.ChangeTracker;
 import org.cp.elements.lang.Assert;
 import org.cp.elements.lang.DateTimeUtils;
 import org.cp.elements.lang.ObjectUtils;
+import org.cp.elements.lang.StringUtils;
 import org.cp.elements.lang.Visitor;
 import org.cp.elements.lang.annotation.Id;
 import org.cp.elements.util.ComparatorUtils;
@@ -66,7 +67,7 @@ import org.cp.elements.util.ComparatorUtils;
 @SuppressWarnings("unused")
 public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> implements Bean<ID, USER, PROCESS> {
 
-  private static final boolean DEFAULT_EVENT_DISPATCH_ENABLED = true;
+  protected static final boolean DEFAULT_EVENT_DISPATCH_ENABLED = true;
 
   private volatile boolean eventDispatchEnabled = DEFAULT_EVENT_DISPATCH_ENABLED;
 
@@ -476,7 +477,7 @@ public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> imp
   @Override
   public int compareTo(final Bean obj) {
     Assert.isInstanceOf(obj, getClass(), new ClassCastException(String.format(
-      "The Bean being compared with this Bean must be an instance of %1$s!", getClass().getName())));
+      "The Bean to compare with this Bean must be an instance of %1$s!", getClass().getName())));
     return ComparatorUtils.compareIgnoreNull(getId(), obj.getId());
   }
 
@@ -609,8 +610,14 @@ public abstract class AbstractBean<ID extends Comparable<ID>, USER, PROCESS> imp
    * created.
    */
   protected boolean mapPropertyNameToFieldName(final String propertyName, final String fieldName) {
-    // TODO add possible validation for the property name and field name of this Bean class.
-    propertyNameToFieldNameMapping.put(propertyName, fieldName);
+    // TODO verify the property name and field name are valid for this Bean class
+    if (StringUtils.hasText(fieldName)) {
+      propertyNameToFieldNameMapping.put(propertyName, fieldName);
+    }
+    else {
+      propertyNameToFieldNameMapping.remove(propertyName);
+    }
+
     return propertyNameToFieldNameMapping.containsKey(propertyName);
   }
 
