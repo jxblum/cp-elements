@@ -210,7 +210,7 @@
                 <configuration>
                   <type>date</type>
                   <dates>
-                    <date implementation="java.lang.String">2021-04-25</date>
+                    <date implementation="java.lang.String">2022-04-25</date>
                     <date implementation="java.lang.String">2022-09-10</date>
                   </dates>
                   <dateFormat>yyyy-MM-dd</dateFormat>
